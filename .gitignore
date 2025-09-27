@@ -1,24 +1,99 @@
-# Compiled class file
-*.class
+import static java.lang.Math.*;
 
-# Log file
-*.log
+public class LR1{
+    public static void main(String[] args){
+        long[] n = createN();
+        double[] x = createX();
+        double[][] s = FillS(n, x);
 
-# BlueJ files
-*.ctxt
+        ReturnS(s);
+    }
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+    static long[] createN(){ //создание массива n с числами от 1 до 18
+        long[] n = new long[18];
+        for(int i = 0; i<18; i++){
+            n[i] = i+1;
+        }
+        return n;
+    }
+    static double[] createX(){ //создание массива с рандомами
+        double[] x = new double[10];
+        for(int j = 0; j<10; j++){
+            x[j] = (round(((random()*(12)) - 4)*100.0)/100.0);
+        }
+        return x;
+    }
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+    static double FirstCheck(double X){
+        double newS;
+        newS = round(sin((0.25)/(X*(3.0*X) + 4)) * 100.0) / 100.0;
+        return newS;
+    }
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+    static double SecondCheck(double X){
+        double newS;
+        newS = round(cbrt(exp(pow(X, 2))) * 100.0) / 100.0;
+        return newS;
+    }
+
+    static double FirdCheck(double X){
+        double newS;
+        newS = (round(pow((cbrt(pow(log(abs(X)), (asin((X+2)/12)))) / 3), 2) * 100.0)) / 100.0;
+        return newS;
+    }
+
+    static double[][] FillS(long[] n, double[] x){ // заполняем S
+        double[][] s = new double [18][10];
+        double[] checkMas = {1, 2, 4, 5, 8, 12, 14, 16, 18.0};
+
+        for(int i = 0; i<n.length; i++){
+            int flag = 0;
+                for (double element : checkMas){
+                    if (n[i] == element){
+                        flag = 1;
+                    }
+                }
+            for(int j = 0; j<x.length; j++){
+
+                if(n[i] == 13){
+                    s[i][j] = FirstCheck(x[j]);
+                }
+                
+                else if(flag == 1){
+                    s[i][j] = SecondCheck(x[j]);
+                }
+
+                else{
+                    s[i][j] = FirdCheck(x[j]);
+                }
+            }
+        }
+
+        return s;
+    }
+
+    static void ReturnS(double[][] s){ // вывод S с красивым разделением
+        int rows = s.length;
+        int colums = s[0].length;
+        int MX = 0; 
+        
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < colums; j++){
+                int currentLength = String.valueOf(s[i][j]).length();
+                if(currentLength > MX){
+                    MX = currentLength;
+                }
+            }
+        }
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < colums; j++){
+                String currentStr = String.valueOf(s[i][j]);
+                int spacesNeeded = MX - currentStr.length();
+                System.out.print(currentStr + " ".repeat(spacesNeeded) + " | ");
+            }
+            System.out.println();
+        }
+    }
+}
+
